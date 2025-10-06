@@ -1,4 +1,4 @@
-# # R/fisheries/fisheries_pipeline.R
+# # R/fisheries/fisheries_targets.R
 
 # fisheries_targets <- function() {
 #   list(
