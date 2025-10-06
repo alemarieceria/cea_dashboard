@@ -199,6 +199,8 @@ found
 
 ## Resources
 
+- [Workflow Conventions
+  Notes](https://github.com/alemarieceria/cea_dashboard/tree/main/docs/workflow_conventions.md)
 - [Getting Started with {Rhino} to Build Enterprise-Grade Shiny
   Apps](https://www.youtube.com/watch?v=_Om68Yj5Sxc&list=PLNuj1Dnarqy6Ye2SuVtHiDiB1AHC0_HUu&index=18)
   by Appsilon
