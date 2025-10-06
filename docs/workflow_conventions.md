@@ -41,30 +41,56 @@ Dashboard visualizations    # Read with tar_read()
 **Best practices:**
 - Each dataset (fisheries, recreation, etc.) has its own ETL pipeline under `R/`.  
 - The `{targets}` package manages dependencies so only changed steps are re-run.  
-- All intermediate and processed files are saved in `data/processed/` and excluded from Git.
+- All raw data are ignored in Git, while processed outputs are tracked for reproducibility.
 
 ---
 
 ## Modular `{targets}` Pipelines
 
-Each major section of the dashboard (Fisheries, Extents, Conditions, Recreation) will have its own modular pipeline — a self-contained ETL workflow that feeds into the main `_targets.R` file.
+Each major section of the dashboard (Fisheries, Extents, Conditions, Recreation) has its own modular pipeline — a self-contained ETL workflow that feeds into the main `_targets.R` file.
 
 ### Folder Structure
 ```
-R/
-├── fisheries/
-│   ├── functions/
-│   │   ├── load_fisheries_data.R
-│   │   ├── process_fisheries_data.R
-│   │   └── export_fisheries_data.R
-│   └── fisheries_targets.R
-└── _targets.R
+R/                           # Custom R functions and modular ETL pipelines
+├── fisheries_data/          # ETL pipeline for Fisheries dataset
+│   ├── functions/           # Helper functions used in the Fisheries ETL
+│   │   ├── 01_load_fisheries_data.R     # Loads raw fisheries input data
+│   │   ├── 02_process_fisheries_data.R  # Cleans and transforms fisheries data
+│   │   └── 03_export_fisheries_data.R   # Exports processed fisheries outputs
+│   └── fisheries_targets.R  # Defines modular `{targets}` pipeline for Fisheries ETL
+│
+├── mokus_layer/             # ETL pipeline for Mokus layer data
+│   ├── functions/           # Helper functions used in the Mokus ETL
+│   │   ├── 01_load_mokus_layer.R        # Loads raw Mokus layer data
+│   │   ├── 02_process_mokus_layer.R     # Cleans and transforms Mokus layer data
+│   │   └── 03_export_mokus_layer.R      # Exports processed Mokus layer outputs
+│   └── mokus_targets.R      # Defines modular `{targets}` pipeline for Mokus ETL
+└── _targets.R               # Main `{targets}` pipeline configuration (imports all modular ETLs)
 ```
 
 **Why modular pipelines work well:**
 1. **Reproducibility** – Every step is documented and cached, so anyone can rebuild the results exactly.  
 2. **Efficiency** – `{targets}` only re-runs steps that are affected by a change.  
 3. **Scalability** – You can add new pipelines or datasets easily without breaking the existing structure.
+
+---
+
+## .gitignore Configuration
+
+To ensure reproducibility and security, only the **raw data folders** inside `data/` are ignored.  
+This keeps sensitive or large input data out of version control while still tracking processed outputs.
+
+### Example .gitignore
+```bash
+# Ignore only raw data folders
+data/**/raw/
+
+# Keep processed data and structure
+!data/**/processed/
+!data/.gitkeep
+```
+
+You can add an empty `.gitkeep` file inside each `processed/` folder to ensure the directory structure remains visible in Git.
 
 ---
 
@@ -88,37 +114,7 @@ I follow the **Conventional Commits** format so my Git history stays organized a
 **Good habits:**
 - Commit after every meaningful change (new feature, setup step, or bug fix).  
 - Write short, action-based messages (“add,” “update,” “fix”).  
-- Include a scope when it adds clarity, like `(targets)` or `(readme)`.  
-
----
-
-## Version Control Best Practices
-
-- Check your work often with `git status`.  
-- Stage intentionally — use `git add <file>` to commit only relevant edits.  
-- Never commit large data or generated files; add folders like `data/` or `cache/` to `.gitignore`.  
-- Push updates after completing a clear milestone (setup, new ETL pipeline, dashboard feature, etc.).  
-
----
-
-## Code Style and Organization
-
-- Keep scripts focused and under ~100 lines when possible.  
-- Use comments to explain *why* something is done, not *what* the code does.  
-- Maintain consistent indentation (2 spaces in R).  
-- Store shared settings (like file paths, CRS, etc.) in `config.yml`.  
-- Separate logic into smaller functions — it improves readability and testing.  
-
----
-
-## Reproducibility Tools
-
-| Tool | Purpose | How It’s Used |
-|------|----------|---------------|
-| `{renv}` | Dependency management | Snapshots package versions to reproduce environments. |
-| `{targets}` | Workflow automation | Defines ETL steps and rebuild logic. |
-| Rhino | Shiny framework | Provides a modular structure for the dashboard. |
-| GitHub | Version control & collaboration | Tracks project evolution and makes sharing easier. |
+- Include a scope when it adds clarity, like `(targets)` or `(readme)`.
 
 ---
 
@@ -126,16 +122,51 @@ I follow the **Conventional Commits** format so my Git history stays organized a
 
 ```
 cea_dashboard/
-├── app/                  # Shiny app (Rhino)
-├── data/                 # Raw and processed data (not tracked in Git)
-├── R/                    # R scripts, ETL, and pipelines
-│   └── fisheries/
-│       ├── functions/    # Helper functions
-│       └── fisheries_targets.R
-├── _targets.R            # Main targets pipeline config
-├── renv.lock             # Locked package versions
-├── README.qmd            # Project documentation
-└── .gitignore            # Excludes data and cache
+├── .github/                     # GitHub configuration (actions, workflows, etc.)
+│
+├── app/                         # Rhino Shiny application structure
+│   ├── js/                      # Custom JavaScript files
+│   ├── logic/                   # Server-side logic scripts
+│   ├── static/                  # Images or static assets
+│   ├── styles/                  # Custom CSS and styling
+│   ├── view/                    # UI layout and component files
+│   └── main.R                   # Main app entry point (calls Rhino's app structure)
+│
+├── data/
+│   └── fisheries/               # Data used for the Fisheries page
+│       ├── processed/           # Output from `{targets}` (cleaned datasets)
+│       └── raw/                 # Input data (excluded from Git; not shared)
+│
+├── R/                           # Custom R functions and modular ETL pipelines
+│   ├── fisheries_data/          # ETL pipeline for Fisheries dataset
+│   │   ├── functions/           # Helper functions used in the Fisheries ETL
+│   │   │   ├── 01_load_fisheries_data.R     # Loads raw fisheries input data
+│   │   │   ├── 02_process_fisheries_data.R  # Cleans and transforms fisheries data
+│   │   │   └── 03_export_fisheries_data.R   # Exports processed fisheries outputs
+│   │   └── fisheries_targets.R  # Defines modular `{targets}` pipeline for Fisheries ETL
+│
+│   ├── mokus_layer/             # ETL pipeline for Mokus layer data
+│   │   ├── functions/           # Helper functions used in the Mokus ETL
+│   │   │   ├── 01_load_mokus_layer.R        # Loads raw Mokus layer data
+│   │   │   ├── 02_process_mokus_layer.R     # Cleans and transforms Mokus layer data
+│   │   │   └── 03_export_mokus_layer.R      # Exports processed Mokus layer outputs
+│   │   └── mokus_targets.R      # Defines modular `{targets}` pipeline for Mokus ETL
+│
+├── renv/                        # Local R environment managed by `{renv}`
+├── tests/                       # (Optional) Automated tests for reproducibility
+├── _targets.R                   # Main `{targets}` pipeline configuration (imports all modular ETLs)
+├── .gitignore                   # Specifies ignored raw data folders and tracked processed outputs
+├── .lintr                       # Linting configuration for code style
+├── .Renviron                    # Environment variables
+├── .Rprofile                    # R session startup settings
+├── app.R                        # Rhino launcher script (calls `rhino::app()`)
+├── cea_dashboard.Rproj          # RStudio/Posit project file
+├── config.yml                   # Rhino configuration for environment and app options
+├── dependencies.R               # Script to install key project dependencies
+├── README.qmd                   # Quarto README (rendered documentation)
+├── README.md                    # Rendered Markdown version for GitHub
+├── renv.lock                    # Snapshot of R package versions for reproducibility
+└── rhino.yml                    # Rhino project configuration (defines app entry and structure)
 ```
 
 ---
