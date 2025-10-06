@@ -89,7 +89,7 @@ cd cea_dashboard
 ```
 ````
 
-Open the project in desired ID (I use Positron), then run to recreate
+Open the project in desired IDE (I use Positron), then run to recreate
 the exact R package environment recorded in `renv.lock`:
 
 ```` markdown

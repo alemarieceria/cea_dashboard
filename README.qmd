@@ -76,7 +76,7 @@ git clone https://github.com/<your-username>/cea_dashboard.git
 cd cea_dashboard
 ```
 
-Open the project in desired ID (I use Positron), then run to recreate the exact R package environment recorded in `renv.lock`:
+Open the project in desired IDE (I use Positron), then run to recreate the exact R package environment recorded in `renv.lock`:
 
 ```{r}
 install.packages("renv")
