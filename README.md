@@ -10,6 +10,7 @@
 - [Deployment](#deployment)
 - [Data Sources](#data-sources)
 - [Reproducibility Notes](#reproducibility-notes)
+- [Resources](#resources)
 - [Author](#author)
 
 **A reproducible spatial data dashboard built with the [Rhino Shiny
@@ -27,6 +28,55 @@ dashboard that makes it easier to explore and share results. This
 project shows how I build reproducible data-to-dashboard workflows in R.
 
 ## Project Structure
+
+``` text
+cea_dashboard/
+├── .github/ # GitHub configuration (actions, workflows, etc.)
+│
+├── app/ # Rhino Shiny application structure
+│ ├── js/ # Custom JavaScript files
+│ ├── logic/ # Server-side logic scripts
+│ ├── static/ # Images or static assets
+│ ├── styles/ # Custom CSS and styling
+│ ├── view/ # UI layout and component files
+│ └── main.R # Main app entry point (calls Rhino's app structure)
+│
+├── data/
+│ └── fisheries/ # Data used for the Fisheries page
+│ │ ├── processed/ # Output from `{targets}` (cleaned datasets)
+│ │ └── raw/ # Input data (excluded from Git; not shared)
+|
+├── R/ # Custom R functions and modular ETL pipelines
+│ └── fisheries/
+│ ├── functions/ # Helper functions used in the Fisheries ETL
+│ │ ├── export_fisheries_data.R # Exports processed data
+│ │ ├── load_fisheries_data.R # Loads raw input data
+│ │ └── process_fisheries_data.R # Cleans and transforms data
+│ └── fisheries_targets.R # Defines modular `{targets}` pipeline for Fisheries ETL
+│
+├── renv/ # Local R environment managed by `{renv}`
+│
+├── tests/ # (Optional) Automated tests for reproducibility
+│
+├── _targets.R # Main `{targets}` pipeline configuration (imports all modular ETLs)
+│
+├── .gitignore # Specifies files/folders excluded from version control
+├── .lintr # Linting configuration for code style
+├── .Renviron # Environment variables
+├── .Rprofile # R session startup settings
+│
+├── app.R # Rhino launcher script (calls `rhino::app()`)
+│
+├── cea_dashboard.Rproj # RStudio/Posit project file
+├── config.yml # Rhino configuration for environment and app options
+├── dependencies.R # Script to install key project dependencies
+│
+├── README.qmd # Quarto README (rendered documentation)
+├── README.md # Rendered Markdown version for GitHub
+│
+├── renv.lock # Snapshot of R package versions for reproducibility
+└── rhino.yml # Rhino project configuration (defines app entry and structure)
+```
 
 ## Installation and Setup
 
@@ -53,8 +103,6 @@ renv::restore()
 
 Core packages used in this project:
 
-<center>
-
 | Category      | Packages                             |
 |---------------|--------------------------------------|
 | Framework     | `rhino`, `bs4Dash`, `shiny`          |
@@ -62,8 +110,6 @@ Core packages used in this project:
 | Spatial Data  | `sf`, `terra`, `dplyr`, `janitor`    |
 | Visualization | `ggplot2`, `plotly`, `leaflet`, `DT` |
 | Utilities     | `renv`, `purrr`, `here`, `readr`     |
-
-</center>
 
 ## Reproducible Workflow
 
@@ -138,12 +184,8 @@ found
 
 ## Data Sources
 
-<center>
-
 | Dataset | Description | Source |
 |---------|-------------|--------|
-
-</center>
 
 ## Reproducibility Notes
 
@@ -154,6 +196,15 @@ found
 - Modular `{shiny}` app structure using `{rhino}`
 - Version control via Git and GitHub
 - Data directories excluded from commits (`.gitignore`)
+
+## Resources
+
+- [Getting Started with {Rhino} to Build Enterprise-Grade Shiny
+  Apps](https://www.youtube.com/watch?v=_Om68Yj5Sxc&list=PLNuj1Dnarqy6Ye2SuVtHiDiB1AHC0_HUu&index=18)
+  by Appsilon
+- [Intro to bs4dash: Improved R Shiny
+  Dashboards](https://www.youtube.com/watch?v=LY6K_GD4ypc&list=PLNuj1Dnarqy6Ye2SuVtHiDiB1AHC0_HUu&index=25&t=362s)
+  by Ash \| Dashboards & Data Visualisation
 
 ## Author
 
