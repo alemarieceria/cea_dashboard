@@ -31,51 +31,58 @@ project shows how I build reproducible data-to-dashboard workflows in R.
 
 ``` text
 cea_dashboard/
-├── .github/ # GitHub configuration (actions, workflows, etc.)
+├── .github/                     # GitHub configuration (actions, workflows, etc.)
 │
-├── app/ # Rhino Shiny application structure
-│ ├── js/ # Custom JavaScript files
-│ ├── logic/ # Server-side logic scripts
-│ ├── static/ # Images or static assets
-│ ├── styles/ # Custom CSS and styling
-│ ├── view/ # UI layout and component files
-│ └── main.R # Main app entry point (calls Rhino's app structure)
+├── app/                         # Rhino Shiny application structure
+│   ├── js/                      # Custom JavaScript files
+│   ├── logic/                   # Server-side logic scripts
+│   ├── static/                  # Images or static assets
+│   ├── styles/                  # Custom CSS and styling
+│   ├── view/                    # UI layout and component files
+│   └── main.R                   # Main app entry point (calls Rhino's app structure)
 │
 ├── data/
-│ └── fisheries/ # Data used for the Fisheries page
-│ │ ├── processed/ # Output from `{targets}` (cleaned datasets)
-│ │ └── raw/ # Input data (excluded from Git; not shared)
-|
-├── R/ # Custom R functions and modular ETL pipelines
-│ └── fisheries/
-│ ├── functions/ # Helper functions used in the Fisheries ETL
-│ │ ├── export_fisheries_data.R # Exports processed data
-│ │ ├── load_fisheries_data.R # Loads raw input data
-│ │ └── process_fisheries_data.R # Cleans and transforms data
-│ └── fisheries_targets.R # Defines modular `{targets}` pipeline for Fisheries ETL
+│   └── fisheries/               # Data used for the Fisheries page
+│       ├── processed/           # Output from `{targets}` (cleaned datasets)
+│       └── raw/                 # Input data (excluded from Git; not shared)
 │
-├── renv/ # Local R environment managed by `{renv}`
+├── R/                           # Custom R functions and modular ETL pipelines
+│   ├── fisheries_data/          # ETL pipeline for Fisheries dataset
+│   │   ├── functions/           # Helper functions used in the Fisheries ETL
+│   │   │   ├── 01_load_fisheries_data.R     # Loads raw fisheries input data
+│   │   │   ├── 02_process_fisheries_data.R  # Cleans and transforms fisheries data
+│   │   │   └── 03_export_fisheries_data.R   # Exports processed fisheries outputs
+│   │   └── fisheries_targets.R  # Defines modular `{targets}` pipeline for Fisheries ETL
+│   │
+│   ├── mokus_layer/             # ETL pipeline for Mokus layer data
+│   │   ├── functions/           # Helper functions used in the Mokus ETL
+│   │   │   ├── 01_load_mokus_layer.R        # Loads raw Mokus layer data
+│   │   │   ├── 02_process_mokus_layer.R     # Cleans and transforms Mokus layer data
+│   │   │   └── 03_export_mokus_layer.R      # Exports processed Mokus layer outputs
+│   │   └── mokus_targets.R      # Defines modular `{targets}` pipeline for Mokus ETL
 │
-├── tests/ # (Optional) Automated tests for reproducibility
+├── renv/                        # Local R environment managed by `{renv}`
 │
-├── _targets.R # Main `{targets}` pipeline configuration (imports all modular ETLs)
+├── tests/                       # (Optional) Automated tests for reproducibility
 │
-├── .gitignore # Specifies files/folders excluded from version control
-├── .lintr # Linting configuration for code style
-├── .Renviron # Environment variables
-├── .Rprofile # R session startup settings
+├── _targets.R                   # Main `{targets}` pipeline configuration (imports all modular ETLs)
 │
-├── app.R # Rhino launcher script (calls `rhino::app()`)
+├── .gitignore                   # Specifies files/folders excluded from version control
+├── .lintr                       # Linting configuration for code style
+├── .Renviron                    # Environment variables
+├── .Rprofile                    # R session startup settings
 │
-├── cea_dashboard.Rproj # RStudio/Posit project file
-├── config.yml # Rhino configuration for environment and app options
-├── dependencies.R # Script to install key project dependencies
+├── app.R                        # Rhino launcher script (calls `rhino::app()`)
 │
-├── README.qmd # Quarto README (rendered documentation)
-├── README.md # Rendered Markdown version for GitHub
+├── cea_dashboard.Rproj          # RStudio/Posit project file
+├── config.yml                   # Rhino configuration for environment and app options
+├── dependencies.R               # Script to install key project dependencies
 │
-├── renv.lock # Snapshot of R package versions for reproducibility
-└── rhino.yml # Rhino project configuration (defines app entry and structure)
+├── README.qmd                   # Quarto README (rendered documentation)
+├── README.md                    # Rendered Markdown version for GitHub
+│
+├── renv.lock                    # Snapshot of R package versions for reproducibility
+└── rhino.yml                    # Rhino project configuration (defines app entry and structure)
 ```
 
 ## Installation and Setup
