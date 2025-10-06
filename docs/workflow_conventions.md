@@ -125,7 +125,7 @@ I follow the **Conventional Commits** format so my Git history stays organized a
 ## Project Folder Overview
 
 ```
-CEA_DASHBOARD/
+cea_dashboard/
 ├── app/                  # Shiny app (Rhino)
 ├── data/                 # Raw and processed data (not tracked in Git)
 ├── R/                    # R scripts, ETL, and pipelines
